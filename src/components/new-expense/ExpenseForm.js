@@ -31,24 +31,17 @@ const ExpenseForm = ({ onAdd, onCancel }) => {
 
         // 객체나 배열상태로 관리되는 상태값은
         // 상태변경 시 새로운 객체나 배열을 setter 에 전달해야 한다.
-
         setUserInput(prevUserInput => ({
             ...prevUserInput,
             title: e.target.value
         }))
-
-        // setUserInput({
-        //     ...userInput, // 기존 객체에 있는것 복사
-        //     title: 'ㅂㅇ'
-        //     // title: e.target.value // 변경할 부분 수정
-        // });
     }
 
     // 가격이 입력되었을 때 발생하는 이벤트 핸들러
     const priceChangeHandler = e => {
         setUserInput({
             ...userInput,
-            price: e.target.value
+            price: +e.target.value
         });
     }
 
@@ -59,8 +52,6 @@ const ExpenseForm = ({ onAdd, onCancel }) => {
             date: e.target.value
         });
     }
-
-
 
     // 폼 전송 이벤트 핸들러
     const submitHandler = e => {
