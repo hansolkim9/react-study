@@ -30,8 +30,7 @@ const ExpenseItem = ({ date, title, price: exPrice }) => {
 
     console.log('렌더링 전');
     return (
-        <Card className='border-blue'>
-            <div className='expense-item'>
+        <Card className='expense-item'>
                 {/*<div>{makeFormattedDate()}</div>*/}
                 <ExpenseDate exDate={date}/>
                 <div className='expense-item__description'>
@@ -39,7 +38,6 @@ const ExpenseItem = ({ date, title, price: exPrice }) => {
                     <div className='expense-item__price'>{formattedPrice}원</div>
                 </div>
                 {/*<button id='btn' onClick={clickHandler}>제목수정</button>*/}
-            </div>
         </Card>
     )
 }
