@@ -1,8 +1,7 @@
 import './App.css';
-import React from "react";
+import React, {useState} from "react";
 import ExpenseList from "./components/expenses/ExpenseList";
 import NewExpense from "./components/new-expense/NewExpense";
-import CheckBoxStyle from "./components/practice/CheckBoxStyle";
 
 const App = () => {
 
@@ -14,20 +13,16 @@ const App = () => {
         {title: '컵라면', price: 1500, date: new Date (2022, 4 - 1, 5)}
     ]
 
+    // 배열을 상태변수로 관리
+    const [expenseList, setExpenseList] = useState(expenses);
 
     // ExpenseForm 에게 내려보낼 함수
-    const onAddExpense = (userInput) => {
-        console.log('App.js 가 내려보낸 함수 호출!');
-        console.log(userInput)
-
-        expenses.push(userInput);
-        console.log(expenses);
-    };
+    const onAddExpense = (userInput) => setExpenseList([...expenseList, userInput]);
 
     return (
         <>
             <NewExpense onSave={onAddExpense} />
-            <ExpenseList expenses={expenses} />
+            <ExpenseList expenses={expenseList} />
         </>
     );
 }
