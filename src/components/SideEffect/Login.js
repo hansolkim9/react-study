@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 
 import Card from '../UI/Card';
 import styles from './Login.module.css';
 import Button from '../UI/Button';
 
-const Login = ({ onLogin }) => {
+const Login = ({onLogin}) => {
     // 사용자가 입력한 이메일을 상태관리
     const [enteredEmail, setEnteredEmail] = useState('');
     // 이메일 입력값이 정상인지 유무 확인
@@ -40,8 +40,10 @@ const Login = ({ onLogin }) => {
         setPasswordIsValid(enteredPassword.trim().length > 6);
     };
 
+    // 로그인 버튼을 눌렀을 때 이벤트 핸들러
     const submitHandler = (e) => {
         e.preventDefault();
+        // App.js에서
         onLogin(enteredEmail, enteredPassword);
     };
 
