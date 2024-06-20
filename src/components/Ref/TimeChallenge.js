@@ -8,15 +8,23 @@ const TimerChallenge = ({ title, targetTime }) => {
     // 타겟 시간이 종료되었는지 여부
     const [timerExpired, setTimerExpired] = useState(false);
 
+    let timer;
     const startHandler = e => {
 
-        setTimeout(() => {
+        timer = setTimeout(() => {
             // console.log('game over!');
             setTimerExpired(true);
         }, targetTime * 1000);
 
         setTimerStarted(true);
     }
+
+    // stop 작동하지 않는 이유는 start 할때 timer가 지역변수이기 때문에
+    // 상태변수의 setter 호출 시 리렌더링이 되면서 새로운 지역변수로 바뀐다.
+    // stop 할때 timer, start 할때 timer 는 다른 변수다.
+    const stopHandler = e => {
+        clearTimeout();
+    };
 
     return (
         <section className="challenge">
@@ -26,7 +34,7 @@ const TimerChallenge = ({ title, targetTime }) => {
                 {targetTime} second{targetTime > 1 ? 's' : ''}
             </p>
             <p>
-                <button onClick={startHandler}>
+                <button onClick={timerStarted ? stopHandler : startHandler}>
                     {timerStarted ? 'Stop' : 'Start'} Challenge
                 </button>
             </p>
