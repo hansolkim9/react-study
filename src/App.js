@@ -1,60 +1,69 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useReducer, useState } from 'react';
 import './App.css';
-import MainHeader from './components/SideEffect/MainHeader';
-import Home from './components/SideEffect/Home';
-import Login from "./components/SideEffect/Login";
+import TodoTemplate from './components/Todo/TodoTemplate';
 
-import AuthContext from "./store/auth-context";
+// bootstrap
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+// 초기 상태
+const initialTodos = [
+    { id: 1, text: '리액트 공부하기', done: false },
+    { id: 2, text: '운동하기', done: false },
+    { id: 3, text: '청소하기', done: false }
+];
+
+// 리듀서 함수
+function todoReducer(state, action) {
+    switch (action.type) {
+        case 'ADD_TODO':
+            return [...state, action.todo];
+        case 'TOGGLE_TODO':
+            return state.map(todo =>
+                todo.id === action.id ? { ...todo, done: !todo.done } : todo
+            );
+        case 'REMOVE_TODO':
+            return state.filter(todo => todo.id !== action.id);
+        default:
+            return state;
+    }
+}
 
 const App = () => {
+    const [todos, dispatch] = useReducer(todoReducer, initialTodos);
+    const [input, setInput] = useState('');
+    const [nextId, setNextId] = useState(4); // 초기 값은 4로 설정 (이미 3개의 초기 할 일이 있으므로)
 
-    // 현재 로그인 상태를 체크하는 변수
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-    // console.log('로그인 검사 수행')
-    // localStorage에서 login-flag를 꺼냄
-    // const storedLoginFlag = localStorage.getItem('login-flag');
-    // 로그인 검사를 초기에 1번만 수행
-    // if (storedLoginFlag === '1') {
-        // 상태변수가 setter로 변경되면
-        // 리액트는 변경감지 후 바로 리-렌더링을 수행함
-        // setIsLoggedIn(true);
-    // }
-
-    // side effect 처리를 위한 함수
-    // useEffect는 기본적으로 컴포넌트 렌더링시 단 한번만 호출
-    useEffect(() => {
-        // console.log('로그인 검사 수행!');
-        const storedLoginFlag = localStorage.getItem('login-flag');
-        if (storedLoginFlag === '1') {
-            setIsLoggedIn(true);
-        }
-    }, []);
-
-    // 서버 통신은 중앙집중 관리가 중요함
-    const loginHandler = (email, password) => {
-        // 로그인의 증거로 클라이언트에 1이라는 숫자를 기록
-        localStorage.setItem('login-flag', 1);
-        setIsLoggedIn(true);
+    const addTodo = (text) => {
+        const newTodo = {
+            id: nextId,
+            text,
+            done: false
+        };
+        dispatch({ type: 'ADD_TODO', todo: newTodo });
+        setNextId(nextId + 1);
     };
 
-    // 로그아웃 실행 함수
-    const logoutHandler = () => {
-        localStorage.removeItem('login-flag');
-        setIsLoggedIn(false);
-    }
+    const onChange = (e) => setInput(e.target.value);
+
+    const onSubmit = (e) => {
+        e.preventDefault();
+        if (input.trim() === '') return; // 빈 입력은 무시
+        addTodo(input);
+        setInput('');
+    };
+
+    const onToggle = (id) => dispatch({ type: 'TOGGLE_TODO', id });
+    const onRemove = (id) => dispatch({ type: 'REMOVE_TODO', id });
 
     return (
-        <AuthContext.Provider value={{
-            isLoggedIn: isLoggedIn,
-            onLogout: logoutHandler
-        }}>
-            <MainHeader onLogout={logoutHandler} />
-            <main>
-                {isLoggedIn && <Home/>}
-                {!isLoggedIn && <Login onLogin={loginHandler}/>}
-            </main>
-        </AuthContext.Provider>
+        <TodoTemplate
+            todos={todos}
+            input={input}
+            onChange={onChange}
+            onSubmit={onSubmit}
+            onToggle={onToggle}
+            onRemove={onRemove}
+        />
     );
 };
 
