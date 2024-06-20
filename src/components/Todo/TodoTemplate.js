@@ -38,10 +38,19 @@ const TodoTemplate = () => {
         setTodoList(todoList.filter(todo => todo.id !== id));
     };
 
+    const checkTodo = id => {
+        const copyTodoList = [...todoList];
+        const foundTodo = copyTodoList.find(todo => todo.id === id);
+        foundTodo.done = !foundTodo.done;
+        setTodoList(copyTodoList);
+
+
+    }
+
     return (
         <div className='TodoTemplate'>
             <TodoHeader />
-            <TodoMain todos={todoList} onRemove={removeTodo} />
+            <TodoMain todos={todoList} onRemove={removeTodo} onCheck={checkTodo}/>
             <TodoInput onAdd={addTodo} />
         </div>
     );
