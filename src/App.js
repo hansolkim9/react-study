@@ -14,7 +14,7 @@ const App = () => {
                 <TimerChallenge title='Pros only' targetTime={15}/>
             </div>
         </>
-    )
+    );
 };
 
 export default App;
