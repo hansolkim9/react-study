@@ -20,7 +20,7 @@ const MealItemForm = ({ id, onAddToCart }) => {
     }
 
     return (
-        <form className={styles.form}>
+        <form className={styles.form} onClick={submitHandler}>
             <Input
                 ref={inputRef}
                 label='수량'
@@ -33,7 +33,7 @@ const MealItemForm = ({ id, onAddToCart }) => {
                     defaultValue: '1',
                 }}
             />
-            <button onClick={submitHandler}>담기</button>
+            <button >담기</button>
         </form>
     );
 };
