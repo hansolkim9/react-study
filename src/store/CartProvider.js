@@ -1,5 +1,6 @@
 import React, { useReducer, useState } from 'react';
 import CartContext from './cart-context';
+import { upload } from '@testing-library/user-event/dist/upload';
 
 // 중앙관리 상태값 (state)
 const defaultState = {
@@ -20,17 +21,54 @@ const cartReducer = (state, action) => {
 
         // 상태 업데이트 코드
         // 장바구니 배열 상태 업데이트
+
+        // 장바구니에 추가될 신규 아이템
+        const newCartItem = action.value;
+
+        // 기존에 등록된 메뉴인지 확인해보기 위해 해당 아이템의 인덱스를 탐색
+        const index = state.items.findIndex(item => item.id === newCartItem.id);
+
+        // 기존에 존재하는 아이템배열 사본
+        const existingItems = [...state.items];
+
+        // 신규 아이템인 경우
+        let updatedItems;
+        if (index === -1) {
+            updatedItems = [...existingItems, newCartItem];
+        } else { // 이미 장바구니에 있었던 상품의 추가 : 수량만 업데이트
+            existingItems[index].amount += newCartItem.amount;
+            updatedItems = [...existingItems];
+        }
+
+        // 기존에 장바구니에 없는 새로운 상품이 장바구니에 추가된 경우
         const updateCartItems = [...state.items, action.value];
 
         // 총액 상태 업데이트
         const updatePrice = state.totalPrice + (action.value.price * action.value.amount);
 
         return {
-            items: updateCartItems,
+            items: updatedItems,
             totalPrice: updatePrice
         }; // 새로운 상태
     } else if (action.type === 'REMOVE') { // 장바구니 제거
-        return null; // 새로운 상태
+        const id = action.id;
+        const existingCartItemIndex = state.items.findIndex(item => item.id === id);
+        const existingItem = state.items[existingCartItemIndex];
+        const updatedTotalPrice = state.totalPrice - existingItem.price;
+        let updatedItems;
+
+        if (existingItem.amount === 1) {
+            updatedItems = state.items.filter(item => item.id !== id);
+        } else {
+            const updatedItem = { ...existingItem, amount: existingItem.amount - 1 };
+            updatedItems = [...state.items];
+            updatedItems[existingCartItemIndex] = updatedItem;
+        }
+
+        return {
+            items: updatedItems,
+            totalPrice: updatedTotalPrice,
+        };
     }
     return defaultState; // 새로운 상태
 };
@@ -55,12 +93,19 @@ const CartProvider = ({ children }) => {
         });
     };
 
+    const removeItemHandler = id => {
+        dispatchCartAction({
+            type: 'REMOVE',
+            id: id
+        });
+    };
+
     // Provider가 실제로 관리할 상태들의 구체적인 내용들
     const cartContext = {
         cartItems: cartState.items, // 상태값
         totalPrice: cartState.totalPrice,
         addItem: addItemHandler, // 상태를 업데이트하는 함수
-        removeItem: id => {}, // 상태를 업데이트하는 함수
+        removeItem: removeItemHandler, // 상태를 업데이트하는 함수
     };
 
     return <CartContext.Provider value={cartContext}>{children}</CartContext.Provider>;

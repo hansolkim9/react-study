@@ -1,8 +1,11 @@
-import React from 'react';
+import React, {useContext} from 'react';
 
 import styles from './CartItem.module.scss';
+import CartContext from "../../../store/cart-context";
 
 const CartItem = ({ cart }) => {
+
+    const { addItem, removeItem } = useContext(CartContext);
 
     const { name, price, amount } = cart;
 
@@ -15,6 +18,21 @@ const CartItem = ({ cart }) => {
     } = styles;
     const formatPrice = new Intl.NumberFormat('ko-KR').format(price);
 
+    const cartAddHandler = e => {
+
+        // 장바구니에 보낼 객체
+        const item = {
+            ...cart,
+            amount: 1,
+        };
+
+        addItem(item);
+    }
+
+    const cartRemoveHandler = () => {
+        removeItem(cart.id);
+    };
+
     return (
         <li className={cartItem}>
             <div>
@@ -25,8 +43,8 @@ const CartItem = ({ cart }) => {
                 </div>
             </div>
             <div className={actions}>
-                <button>−</button>
-                <button>+</button>
+                <button onClick={cartRemoveHandler}>−</button>
+                <button onClick={cartAddHandler}>+</button>
             </div>
         </li>
     );

@@ -12,7 +12,7 @@ const MealItemForm = ( { id, onAddToCart } ) => {
 
     const submitHandler = e => {
         e.preventDefault();
-        const amount = inputRef.current.value;
+        const amount = +inputRef.current.value;
         console.log('select: ', amount);
 
         onAddToCart(amount);
