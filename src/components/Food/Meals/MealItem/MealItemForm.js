@@ -1,10 +1,10 @@
-import React, {useRef, useState} from 'react';
+import React, { useRef, useState } from 'react';
 import Input from '../../../UI/Input/Input';
 import styles from './MealItemForm.module.scss';
 
-const MealItemForm = ({ id, onAddToCart }) => {
+const MealItemForm = ( { id, onAddToCart } ) => {
 
-    // 선택한 수량 값
+    // 선택한 수량값
     // const [amount, setAmount] = useState(0);
 
     // 선택한 수량 값 가져오기
@@ -16,11 +16,11 @@ const MealItemForm = ({ id, onAddToCart }) => {
         console.log('select: ', amount);
 
         onAddToCart(amount);
+    };
 
-    }
 
     return (
-        <form className={styles.form} onClick={submitHandler}>
+        <form className={styles.form} onSubmit={submitHandler}>
             <Input
                 ref={inputRef}
                 label='수량'
@@ -33,7 +33,7 @@ const MealItemForm = ({ id, onAddToCart }) => {
                     defaultValue: '1',
                 }}
             />
-            <button >담기</button>
+            <button>담기</button>
         </form>
     );
 };
