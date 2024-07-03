@@ -1,25 +1,19 @@
-import React, { useEffect } from 'react'
-import EventList from "../components/EventList";
-
+import React from 'react';
+import EventList from '../components/EventList';
+import { useLoaderData } from 'react-router-dom';
 
 const Events = () => {
 
-    const [eventList, setEventList] = React.useState([]);
-
-    useEffect(() => {
-        (async () => {
-            const response = await fetch('http://localhost:8282/events');
-            const jsonData = await response.json();
-            setEventList(jsonData);
-        }) ();
-    }, []);
+    // loader가 리턴한 데이터 받아오기
+    const eventList = useLoaderData();
+    // console.log(eventList);
 
     return (
         <>
             <h1>Events Page</h1>
             <EventList eventList={eventList} />
         </>
-    )
+    );
 };
 
-export default Events
+export default Events;
