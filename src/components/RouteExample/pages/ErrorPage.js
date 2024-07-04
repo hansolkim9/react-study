@@ -11,7 +11,7 @@ const ErrorPage = () => {
     let errorMessage;
 
     if (error.status === 400) {
-        errorMessage = JSON.parse(error.data).message;
+        errorMessage = error.data.message;
         // console.log(errorMessage)
     }
 

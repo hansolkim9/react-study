@@ -1,6 +1,6 @@
 import React from 'react';
 import EventList from '../components/EventList';
-import { useLoaderData } from 'react-router-dom';
+import {json, useLoaderData} from 'react-router-dom';
 
 const Events = () => {
 
@@ -21,15 +21,13 @@ export default Events;
 // loader를 app.js로부터 아웃소싱
 export const loader = async () => {
 
-    const response = await fetch('http://localhost:8282/events');
+    const response = await fetch('http://localhost:8282/events?sort=date');
 
     if (!response.ok) {
         const errorText = await response.text();
-        throw new Response(
-            JSON.stringify({ message: errorText }),
-            {
-                status: response.status
-            }
+        throw json(
+            { message: errorText },
+             { status: response.status }
             );
     }
     return response; // ok일 경우 events[]
