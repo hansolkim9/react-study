@@ -1,15 +1,15 @@
 import React from 'react';
 
 import styles from './EventForm.module.scss';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Form } from 'react-router-dom';
 
-const EventForm = ({ method, event={} }) => {
+const EventForm = ({ method, event = {} }) => {
 
     const {
         title,
         desc: description,
         'img-url': image,
-        'start-date': date
+        'start-date': date,
     } = event;
 
     // 날짜 형식을 변경 (yyyy-MM-dd)
@@ -42,38 +42,43 @@ const EventForm = ({ method, event={} }) => {
         navigate('..');
     };
 
-    const submitHandler = e => {
-        e.preventDefault();
-        console.log('submit form');
-
-        // input에 입력한 값 가져오기
-        const formData = new FormData(e.target);
-        console.log('form: ', formData.get('title'));
-
-        // 서버에 보낼 데이터
-        const payload = {
-            title: formData.get('title'),
-            desc: formData.get('description'),
-            imageUrl: formData.get('image'),
-            beginDate: formData.get('date'),
-        };
-
-        // console.log('payload: ', payload);
-
-        // 서버로 페칭
-        (async () => {
-            const response = await fetch(`http://localhost:8282/events`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload)
-            });
-        })();
-    };
+    // const submitHandler = e => {
+    //     e.preventDefault();
+    //     console.log('submit form');
+    //
+    //     // input에 입력한 값 가져오기
+    //     const formData = new FormData(e.target);
+    //     console.log('form: ', formData.get('title'));
+    //
+    //     // 서버에 보낼 데이터
+    //     const payload = {
+    //         title: formData.get('title'),
+    //         desc: formData.get('description'),
+    //         imageUrl: formData.get('image'),
+    //         beginDate: formData.get('date'),
+    //     };
+    //
+    //     // console.log('payload: ', payload);
+    //
+    //     // 서버로 페칭
+    //     (async () => {
+    //         const response = await fetch(`http://localhost:8282/events`, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify(payload)
+    //         });
+    //     })();
+    // };
 
     return (
-        <form className={styles.form} onSubmit={submitHandler} noValidate>
+        <Form
+            method='post'
+            className={styles.form}
+            // onSubmit={submitHandler}
+            noValidate
+        >
             <p>
                 <label htmlFor="title">Title</label>
                 <input
@@ -123,7 +128,7 @@ const EventForm = ({ method, event={} }) => {
                 </button>
                 <button>{method === 'post' ? 'Save' : 'Modify'}</button>
             </div>
-        </form>
+        </Form>
     );
 };
 
